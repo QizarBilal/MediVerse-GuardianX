@@ -1,3 +1,167 @@
+<div align="center">
+
+# MediVerse Guardian X
+
+### A safety-case workspace for healthcare AI demonstrations
+
+[![Next.js 14](https://img.shields.io/badge/CONTROL_ROOM-NEXT.JS_14-020617?style=for-the-badge&logo=nextdotjs)](#system-topology)
+[![Flask](https://img.shields.io/badge/API-FLASK-0F766E?style=for-the-badge&logo=flask)](#system-topology)
+[![MIT](https://img.shields.io/badge/LICENSE-MIT-16A34A?style=for-the-badge)](LICENSE)
+
+> Role-aware prescription review, interaction flags, audit events, and compliance-oriented dashboards—built as an engineering demonstration, not a clinical system.
+
+</div>
+
+![Concept interface for MediVerse Guardian X — not a live screenshot](https://github.com/user-attachments/assets/2aa90191-29e9-4af6-9823-c806454de5ab)
+
+<p align="center"><sub><strong>AI-GENERATED CONCEPT VISUAL.</strong> The repository has no public deployment or checked-in screenshot. This image illustrates the product direction and is not evidence of the running UI, real data, certification, or clinical validation.</sub></p>
+
+## Safety boundary
+
+> [!CAUTION]
+> **Demonstration only.** MediVerse Guardian X must not diagnose, prescribe, override professional judgment, store real protected health information, or be represented as HIPAA-compliant, production-secure, blockchain-backed, or clinically validated without independent technical, legal, security, and clinical assessment. Drug-interaction output in a demo should be treated as synthetic and non-authoritative.
+
+The project explores how different healthcare roles could collaborate around prescription workflows while preserving an inspectable trail of actions. It includes demo-mode accounts and fallback data so evaluators can study the interface without connecting a real clinical database.
+
+## Who sees what
+
+| Role | Intended demo surface | Must never imply |
+|---|---|---|
+| **Nurse** | Review queue, statuses, interaction flags | Authority to independently prescribe |
+| **Doctor** | Upload/review prescriptions, comments, approvals | Clinically validated decision support |
+| **Administrator** | Users, settings, analytics, audit/compliance views | Automatic regulatory certification |
+
+## Review circuit
+
+```mermaid
+sequenceDiagram
+    actor Clinician
+    participant UI as Next.js workspace
+    participant API as Flask API
+    participant Rules as Demo analysis layer
+    participant Store as MongoDB / demo store
+    Clinician->>UI: Submit or open a prescription review
+    UI->>API: Authenticated API request
+    API->>Rules: Evaluate synthetic interaction signals
+    Rules-->>API: Flags + explanatory demo metadata
+    API->>Store: Persist review and audit event
+    API-->>UI: Role-filtered result
+    UI-->>Clinician: Present flags for human review
+```
+
+## System topology
+
+```mermaid
+flowchart TB
+    subgraph FE["frontend/react · Next.js 14 + TypeScript"]
+      AUTH["Auth context"]
+      DASH["Role-aware dashboard"]
+      FORMS["React Hook Form + Zod"]
+      CHARTS["Recharts + tables"]
+    end
+    subgraph BE["backend · Flask"]
+      JWT["JWT demo authentication"]
+      ROUTES["Auth + workflow routes"]
+      ANALYSIS["Prescription-analysis demo logic"]
+    end
+    DB[("MongoDB")]
+    DEMO[("In-memory demo fallback")]
+    AUTH --> JWT
+    DASH --> ROUTES
+    FORMS --> ROUTES
+    ROUTES --> ANALYSIS
+    ROUTES --> DB
+    ROUTES -. demo mode .-> DEMO
+    ROUTES --> CHARTS
+```
+
+### Frontend bench
+
+Next.js 14, React 18, TypeScript, Tailwind CSS, Headless UI, Heroicons/Lucide, React Hook Form, Zod, Axios, SWR, TanStack Table, Recharts, Framer Motion, and Jest/Testing Library.
+
+### Backend bench
+
+Flask, Flask-CORS, PyMongo, Pydantic, PyJWT, bcrypt, Pillow, HTTPX, and environment-based configuration.
+
+## Run the evaluation environment
+
+### 1. Start the demo API
+
+```bash
+git clone https://github.com/QizarBilal/MediVerse-GuardianX.git
+cd MediVerse-GuardianX/backend
+python -m venv .venv
+# Windows: .venv\Scripts\activate
+# macOS/Linux: source .venv/bin/activate
+pip install -r requirements.txt
+python demo_app.py
+```
+
+The demo API listens on `http://localhost:5000`.
+
+### 2. Start the interface
+
+```bash
+cd ../frontend/react
+npm install
+```
+
+Create `frontend/react/.env.local`:
+
+```dotenv
+NEXT_PUBLIC_API_URL=http://localhost:5000/api
+```
+
+Then run:
+
+```bash
+npm run dev
+```
+
+Open `http://localhost:3000` and use only the credentials presented by the local demo UI or repository documentation. Never reuse demo passwords in a deployed environment.
+
+## Engineering commands
+
+| Location | Command | Purpose |
+|---|---|---|
+| `frontend/react` | `npm run dev` | Local Next.js workspace |
+| `frontend/react` | `npm run build` | Production compilation |
+| `frontend/react` | `npm run type-check` | TypeScript validation |
+| `frontend/react` | `npm test` | Jest suite |
+| `backend` | `python demo_app.py` | Synthetic-data demo API |
+| `backend` | `python app.py` | Database-backed API path |
+
+## Evidence required before real-world use
+
+- [ ] Threat model, penetration test, dependency and secret scanning
+- [ ] Encryption in transit/at rest plus documented key rotation
+- [ ] Least-privilege authorization verified server-side for every route
+- [ ] Immutable, privacy-aware audit design and retention policy
+- [ ] Clinical terminology, drug data, alert logic, and false-positive evaluation
+- [ ] Human factors, accessibility, downtime, and incident-response testing
+- [ ] Applicable jurisdictional privacy/regulatory review
+- [ ] Signed data-processing agreements and verified infrastructure controls
+
+The presence of a feature label in code or UI is not proof that any item above has been satisfied.
+
+## Data discipline
+
+Use generated fixtures only. Do not commit patient identifiers, prescriptions, credentials, access tokens, database dumps, or real audit logs. Keep secrets in ignored environment files and rotate any value that has ever been published.
+
+## Contributing
+
+Open an issue describing the role, workflow, and safety impact before large changes. Pull requests should include focused tests, screenshots from a locally running build, and explicit notes about synthetic data. Avoid language that overstates compliance or clinical capability.
+
+## License
+
+Source code is available under the [MIT License](LICENSE). The license does not grant regulatory approval, clinical validation, compliance certification, or rights to third-party medical terminology and datasets.
+
+<div align="center">
+
+**A dashboard can support review. It cannot replace responsibility.**
+
+</div>
+<img width="1672" height="941" alt="concept-compliance-dashboard" src="https://github.com/user-attachments/assets/2aa90191-29e9-4af6-9823-c806454de5ab" />
 # MediVerse Guardian X
 
 A comprehensive Healthcare AI Compliance Platform with HIPAA monitoring, blockchain integration, and advanced analytics. MediVerse Guardian X provides role-based dashboards for healthcare professionals with AI-powered prescription analysis and compliance monitoring.
